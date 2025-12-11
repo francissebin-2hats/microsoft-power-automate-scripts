@@ -1,14 +1,15 @@
 function main(
   workbook: ExcelScript.Workbook,
   columnLetter: string = "E",
-  password: string = "password",
-  lock: boolean = true
+  currentPassword: string = "GreenMoon",
+  lock: boolean = true,
+  newPassword: string = ""
 ) {
   let sheet = workbook.getActiveWorksheet();
 
   // Remove protection if exists - WITH PASSWORD
   if (sheet.getProtection().getProtected()) {
-    sheet.getProtection().unprotect(password);
+    sheet.getProtection().unprotect(currentPassword);
   }
 
   // Unlock everything first
@@ -25,6 +26,8 @@ function main(
     );
   }
 
+  newPassword = newPassword ? newPassword : currentPassword;
+
   // Protect the sheet WITH PASSWORD
   sheet.getProtection().protect(
     {
@@ -32,7 +35,7 @@ function main(
       allowFormatColumns: true,
       allowFormatRows: true,
     },
-    password
+    newPassword
   );
 
   console.log(`✅ Column ${columnLetter} cells with data are now locked`);
