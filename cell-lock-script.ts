@@ -1,6 +1,6 @@
 function main(
   workbook: ExcelScript.Workbook,
-  columnLetters: string = "E",
+  columnLetters: string = "E,Q",
   currentPassword: string = "GreenMoon",
   lock: boolean = true,
   newPassword: string = ""
@@ -13,7 +13,7 @@ function main(
   }
 
   // Unlock everything first
-  sheet.getRange("A:ZZ").getFormat().getProtection().setLocked(false);
+  //   sheet.getRange("A:AZ").getFormat().getProtection().setLocked(false);
 
   // Split column letters by comma and process each one
   let columnsArray = columnLetters
@@ -23,7 +23,6 @@ function main(
   for (let columnLetter of columnsArray) {
     // Validate column letter format
     if (!/^[A-Z]+$/.test(columnLetter)) {
-      console.log(`⚠️ Skipping invalid column letter: ${columnLetter}`);
       continue;
     }
 
@@ -33,11 +32,6 @@ function main(
 
     if (usedRangeInColumn) {
       usedRangeInColumn.getFormat().getProtection().setLocked(lock);
-      console.log(
-        `Locked ${usedRangeInColumn.getRowCount()} cells in Column ${columnLetter}`
-      );
-    } else {
-      console.log(`No data found in Column ${columnLetter}`);
     }
   }
 
@@ -52,9 +46,4 @@ function main(
     },
     newPassword
   );
-
-  console.log(
-    `✅ Columns ${columnLetters} are now ${lock ? "locked" : "unlocked"}`
-  );
-  console.log("🔒 Sheet is password protected");
 }
