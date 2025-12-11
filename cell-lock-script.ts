@@ -30,8 +30,19 @@ function main(
     let columnToLock = sheet.getRange(`${columnLetter}:${columnLetter}`);
     let usedRangeInColumn = columnToLock.getUsedRange();
 
+    let values = usedRangeInColumn.getValues();
     if (usedRangeInColumn) {
-      usedRangeInColumn.getFormat().getProtection().setLocked(lock);
+      usedRangeInColumn.getFormat().getProtection().setLocked(false);
+    }
+
+    for (let i = 0; i < values.length; i++) {
+      if (values[i][0] !== "" && values[i][0] !== null) {
+        usedRangeInColumn
+          .getCell(i, 0)
+          .getFormat()
+          .getProtection()
+          .setLocked(lock);
+      }
     }
   }
 
