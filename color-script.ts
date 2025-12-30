@@ -12,34 +12,35 @@ function main(
 
   for (let i = 1; i < rowCount; i++) {
     // starting from row 2
-    const row = usedRange.getCell(i, 0).getEntireRow();
-
     const confirmedDate = usedRange
       .getCell(i, confirmedCol - 1)
       .getValue() as number;
     const etdDate = usedRange.getCell(i, etdCol - 1).getValue() as number;
 
-    // Skip if dates are missing
-    if (!confirmedDate || !etdDate) {
-      row.getFormat().getFill().clear();
-      continue;
+    // Determine color based on date difference
+    let fillColor: string | null = null;
+    if (confirmedDate && etdDate) {
+      // Calculate date difference
+      const diff = etdDate - confirmedDate;
+      // Apply colors
+      if (diff >= 1 && diff <= 9) {
+        // Yellow
+        fillColor = "Yellow";
+      } else if (diff >= 10) {
+        // Red
+        fillColor = "Red";
+      }
+      // If diff <= 0, fillColor remains null (no color)
     }
 
-    // Calculate date difference
-    const diff = etdDate - confirmedDate;
-    // Apply colors
-    if (diff <= 0) {
-      // console.log('no color');
-      // No color
-      row.getFormat().getFill().clear();
-    } else if (diff >= 1 && diff <= 9) {
-      // console.log('yellow color');
-      // Yellow
-      row.getFormat().getFill().setColor("Yellow");
-    } else if (diff >= 10) {
-      // console.log('red color');
-      // Red
-      row.getFormat().getFill().setColor("Red");
+    // Color cells A-U (columns 1-21, indices 0-20)
+    for (let col = 0; col < 21; col++) {
+      const cell = usedRange.getCell(i, col);
+      if (fillColor) {
+        cell.getFormat().getFill().setColor(fillColor);
+      } else {
+        cell.getFormat().getFill().clear();
+      }
     }
   }
 }

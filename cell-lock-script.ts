@@ -14,7 +14,7 @@ function main(
   }
 
   // Unlock everything first
-  //   sheet.getRange("A:AZ").getFormat().getProtection().setLocked(false);
+    sheet.getRange("A:AZ").getFormat().getProtection().setLocked(false);
 
   // Validate column letter format
   if (!/^[A-Z]+$/.test(columnLetter)) {
